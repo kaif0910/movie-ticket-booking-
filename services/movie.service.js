@@ -1,8 +1,19 @@
 const Movie = require('../models/movie.model');
-const movie = require('../models/movie.model');
 
-const getMovieById = async (id) => {
-    const movie = Movie.findById(id);
+const createMovie = async (data) => {
+    const movie =await Movie.create(data);
+    return movie;
+}
+
+const deleteMovie = async (movieId) => {
+    const deletedMovie =await Movie.findByIdAndDelete(movieId);
+    return response;
+}
+
+
+const getMovieById = async (movieId) => {
+
+    const movie =await Movie.findById(movieId);
     if(!movie){
         return {
             err: "no movie found for the corresponding id provided"
@@ -12,5 +23,7 @@ const getMovieById = async (id) => {
 }
 
 module.exports ={
-    getMovieById
+    getMovieById,
+    createMovie,
+    deleteMovie
 }

@@ -1,71 +1,44 @@
 const Movie = require("../models/movie.model");
 const movieService = require("../services/movie.service");
+const {successResponseBody, errorResponseBody } = require("../utils/responsebody");
 
-const errorResponseBody = {
-    err: {},
-    data: {},
-    message: "something went wrong, cannot process the request",
-    success: false
-}
 
-const successResponseBody = {
-    err: {},
-    data: {},
-    message: "successfully processed the request",
-    success: true
-}
 
 const createMovie = async (req,res) => {
     try{
-        const movie = await Movie.create(req.body);
-        return res.status(201).json({
-            success: true,
-            error: {},
-            data: movie,
-            message: "successfully created a movie"
-        })
+        const movie = await movieService.createMovie(req.body);
+        successResponseBody.data = movie;
+        successResponseBody.message = "successfully created the movie";
+        return res.status(201).json(successResponseBody);
     } catch(err){
         console.log(err);
-        return res.status(500).json({
-            success: false,
-            error: err,
-            data:{},
-            message: "something went wrong"
-        });
+        return res.status(500).json(errorResponseBody);
     }
 }
 
 const deleteMovie = async (req,res) => {
     try{
-        const response = await Movie.deleteOne({
-            _id: req.params.movieId
-        })
-        return res.status(200).json({
-            success: true,
-            error: {},
-            messege: "successfully deleted the movie",
-            data: response
-        })
+        const response = await movieService.deleteMovie(req.params.movieId);
+        successResponseBody.data = response;
+        successResponseBody.message = "successfully deleted the movie";
+        return res.status(200).json(successResponseBody)
     }catch(err){
         console.log(err);
-        return req.status(500).json({
-            success: false,
-            error: err,
-            message: "something went wrong",
-            data: {}
-        });
+        return res.status(500).json(errorResponseBody);
     }
 }
 
 const getMovie = async (req,res) => {
     try{
-        const response = await movieService.getMovieById(req.params.id);
+        const response = await movieService.getMovieById(req.params.movieId);
         if(response.err){
             errorResponseBody.err = response.err;
             return res.status(response.err).json(errorResponseBody);
         }
-        successResponseBody.data = response;
-        return res.status(200).json(successResponseBody);
+        else{
+            successResponseBody.data = response;
+            return res.status(200).json(successResponseBody);
+        }
     } catch(err){
         console.log(err);
         return res.status(500).json(errorResponseBody);
