@@ -1,3 +1,4 @@
+const Movie = require("../models/movie.model")
 
 const errorResponseBody = {
     err: {},
@@ -8,7 +9,7 @@ const errorResponseBody = {
 
 const successResponseBody = {
     err: {},
-    data: {},
+    data: Movie,
     message: "successfully processed the request",
     success: true
 }

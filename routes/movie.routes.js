@@ -1,9 +1,11 @@
 const movieController = require("../controllers/movie.controller");
 const userController = require("../controllers/user.controller");
+const movieMiddleware = require("../middlewares/movie.middlewares");
 
 
 const routes = (app) => {
     app.post("/mba/api/v1/movies",
+        movieMiddleware.validateCreateRequest,
         movieController.createMovie);
     
     app.delete(

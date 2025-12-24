@@ -17,6 +17,10 @@ const movieSchema = mongoose.Schema({
         type: String,
         required : true
     },
+    director:{
+        type: String,
+        required: true
+    },
     language:{
         type:String,
         required : true,

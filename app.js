@@ -7,6 +7,7 @@ const movieRoutes = require('./routes/movie.routes');
 
 env.config();
 
+app.use(express.json());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:true}));
 
