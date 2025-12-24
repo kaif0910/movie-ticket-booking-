@@ -30,9 +30,14 @@ const routes = (app) => {
     )
 
     app.post(
-            "/mba/api/v1/createUser",
-            userController.createUser
+        "/mba/api/v1/createUser",
+        userController.createUser
         );
+
+    app.get(
+        "/mba/api/v1/movies",
+        movieController.fetchMovies
+    );
 }
 
 
