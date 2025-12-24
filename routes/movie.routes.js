@@ -21,6 +21,12 @@ const routes = (app) => {
         movieController.updateMovie
     )
 
+    app.patch
+    (
+        "/mba/api/v1/movies/:movieId",
+        movieController.updateMovie
+    )
+
     app.post(
             "/mba/api/v1/createUser",
             userController.createUser

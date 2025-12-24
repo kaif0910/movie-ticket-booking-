@@ -51,8 +51,13 @@ const getMovie = async (req,res) => {
 
 const updateMovie = async (req,res) => {
     try{
-        const movie = await movieService.updateMovie(req.params.movieId,req.body);
-        successResponseBody.data = movie;
+        const response = await movieService.updateMovie(req.params.movieId,req.body);
+        if(response.err){
+            errorResponseBody.err = response.err;
+            errorResponseBody.message = "validation error while updating movie";
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data = response;
         successResponseBody.message = "successfully updated the movie";
         return res.status(200).json(successResponseBody);
     } catch(err){
