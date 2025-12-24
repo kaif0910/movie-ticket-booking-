@@ -3,7 +3,6 @@ const movieService = require("../services/movie.service");
 const {successResponseBody, errorResponseBody } = require("../utils/responsebody");
 
 
-
 const createMovie = async (req,res) => {
     try{
         const response = await movieService.createMovie(req.body);
@@ -50,8 +49,22 @@ const getMovie = async (req,res) => {
     }
 }
 
+const updateMovie = async (req,res) => {
+    try{
+        const movie = await movieService.updateMovie(req.params.movieId,req.body);
+        successResponseBody.data = movie;
+        successResponseBody.message = "successfully updated the movie";
+        return res.status(200).json(successResponseBody);
+    } catch(err){
+        console.log(err);
+        errorResponseBody.err = err;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 module.exports = {
     createMovie,
     deleteMovie,
-    getMovie
+    getMovie,
+    updateMovie
 }

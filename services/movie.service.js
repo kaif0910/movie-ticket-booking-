@@ -35,8 +35,14 @@ const getMovieById = async (movieId) => {
     return movie;
 }
 
+const updateMovie = async (movieId,data) => {
+    const movie = await Movie.findByIdAndUpdate(movieId,data,{new: true});
+    return movie;
+}
+
 module.exports ={
     getMovieById,
     createMovie,
-    deleteMovie
+    deleteMovie,
+    updateMovie
 }

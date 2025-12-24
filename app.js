@@ -22,16 +22,6 @@ app.listen(process.env.PORT,async () =>{
     try{
         await mongoose.connect(process.env.DB_URL); //connects to the mongo server
         console.log("db connected");
-        // await Movie.create({
-        //     name:"Bachan Pandey",
-        //     description:"comedy movie masala",
-        //     casts:["akshay kumar","kriti sanon","jackline fernandez"],
-        //     director:"Farhad Samji",
-        //     trailerUrl:"http://bacchanpandey/trailers/1",
-        //     language:"hindi",
-        //     releaseDate: "18-03-2022",
-        //     releaseStatus: "RELEASED"
-        // });
     }catch(err){
         console.log("not able to connect to db",err);
     }
