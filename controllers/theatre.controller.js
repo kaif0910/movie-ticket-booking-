@@ -4,6 +4,11 @@ const {errorResponseBody, successResponseBody} =require("../utils/responsebody")
 const createTheatre = async (req,res) => {
     try {
         let response = await theatreService.createTheatre(req.body);
+        if(response.err){
+            errorResponseBody.err = response.err;
+            errorResponseBody.message = "validation failed on few parameters of the request body";
+            return res.status(response.code).json(errorResponseBody);
+        }
         successResponseBody.data = response;
         successResponseBody.message = "successfully created the theatre";
         return res.status(201).json(successResponseBody);
