@@ -1,6 +1,7 @@
 const theatreService = require("../services/theatre.service");
 const {errorResponseBody, successResponseBody} =require("../utils/responsebody");
 
+
 const createTheatre = async (req,res) => {
     try {
         let response = await theatreService.createTheatre(req.body);
