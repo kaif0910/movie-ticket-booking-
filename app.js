@@ -4,6 +4,8 @@ const env = require("dotenv");
 const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const movieRoutes = require('./routes/movie.routes');
+const theatreRoutes = require("./routes/theatre.routes");
+const userRoutes = require("./routes/user.routes");
 
 env.config();
 
@@ -12,6 +14,8 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:true}));
 
 movieRoutes(app);//invoking movie routes
+theatreRoutes(app);//invoking theatre routes
+userRoutes(app);//invoking user routes
 
 app.get("/",(req,res) => {
     return res.json({

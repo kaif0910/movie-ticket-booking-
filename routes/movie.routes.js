@@ -1,5 +1,4 @@
 const movieController = require("../controllers/movie.controller");
-const userController = require("../controllers/user.controller");
 const movieMiddleware = require("../middlewares/movie.middlewares");
 
 
@@ -27,12 +26,7 @@ const routes = (app) => {
     (
         "/mba/api/v1/movies/:movieId",
         movieController.updateMovie
-    )
-
-    app.post(
-        "/mba/api/v1/createUser",
-        userController.createUser
-        );
+    );
 
     app.get(
         "/mba/api/v1/movies",
