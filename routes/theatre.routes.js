@@ -6,6 +6,10 @@ const routes = (app) => {
         theatreMiddleware.validateCreateRequest,
         theatreController.createTheatre
     )
+
+    app.get("/mba/api/v1/theatres/:theatreId",
+        theatreController.getTheatre
+    )
 }
 
 module.exports = routes;

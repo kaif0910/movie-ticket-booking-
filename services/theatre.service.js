@@ -1,4 +1,5 @@
 const Theatre = require("../models/theatre.model");
+const { successResponseBody, errorResponseBody } = require("../utils/responsebody");
 
 const createTheatre = async (data) => {
     try {
@@ -17,8 +18,26 @@ const createTheatre = async (data) => {
     }
 }
 
+const getTheatre =async (theatreId) => {
+    try {
+        let response = await Theatre.findById(theatreId);
+        if(!response){
+            return {
+            err: "no theatre found for the given id",
+            code: 404
+        }
+    }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+    
+}
+
 
 
 module.exports = {
-    createTheatre
+    createTheatre,
+    getTheatre
 }
