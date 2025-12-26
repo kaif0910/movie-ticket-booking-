@@ -35,9 +35,26 @@ const getTheatre =async (theatreId) => {
     
 }
 
+const deleteTheatre = async (theatreId) => {
+    try {
+        let response = await Theatre.findByIdAndDelete(theatreId);
+        if(!response){
+            return {
+            err: "unable to delete for the given id",
+            code: 500
+            }
+        }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 
 
 module.exports = {
     createTheatre,
-    getTheatre
+    getTheatre,
+    deleteTheatre
 }
