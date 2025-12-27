@@ -53,10 +53,27 @@ const deleteTheatre = async (req,res) => {
     }
 }
 
+const getAllTheatres = async (req,res) => {
+    try {
+        let response = await theatreService.getAllTheatres();
+        if(response.err){
+            errorResponseBody.err = response.err;
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data = response;
+        successResponseBody.message = "Successfully fetched all the Theatres";
+        return res.status(200).json(successResponseBody);
+    } catch (error) {
+        errorResponseBody.err = error;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 
 
 module.exports = {
     createTheatre,
     getTheatre,
-    deleteTheatre
+    deleteTheatre,
+    getAllTheatres
 }
