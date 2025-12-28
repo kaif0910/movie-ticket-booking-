@@ -1,3 +1,4 @@
+const { response } = require('express');
 const Movie = require('../models/movie.model');
 
 const createMovie = async (data) => {
@@ -19,8 +20,20 @@ const createMovie = async (data) => {
 }
 
 const deleteMovie = async (movieId) => {
-    const deletedMovie =await Movie.findByIdAndDelete(movieId);
-    return response;
+    try {
+        const deletedMovie =await Movie.findByIdAndDelete(movieId);
+        if(!response){
+            return {
+                err: "no movie found with the given id",
+                code: 404
+            }
+        }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+    
 }
 
 
