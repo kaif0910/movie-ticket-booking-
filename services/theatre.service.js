@@ -39,8 +39,8 @@ const deleteTheatre = async (theatreId) => {
         let response = await Theatre.findByIdAndDelete(theatreId);
         if(!response){
             return {
-            err: "unable to delete for the given id",
-            code: 500
+            err: "No record of a theatre found for the given id",
+            code: 404
             }
         }
         return response;
