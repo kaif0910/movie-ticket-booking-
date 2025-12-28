@@ -1,6 +1,12 @@
 const { response } = require('express');
 const Movie = require('../models/movie.model');
 
+/**
+ * 
+ * @param  data -> object containing details of the new movie created 
+ * @returns -> returns the new movie created
+ */
+
 const createMovie = async (data) => {
     try{
         const movie =await Movie.create(data);
@@ -19,6 +25,12 @@ const createMovie = async (data) => {
     }
 }
 
+/**
+ * 
+ * @param movieId -> id which will be used to identify the movie to be deleted 
+ * @returns -> object containing the details of the deleted movie
+ */
+
 const deleteMovie = async (movieId) => {
     try {
         const deletedMovie =await Movie.findByIdAndDelete(movieId);
@@ -36,6 +48,12 @@ const deleteMovie = async (movieId) => {
     
 }
 
+/**
+ * 
+ * @param movieId -> movie id which will be used to identify the movie to be fetched
+ * @returns -> object containing movie fetched 
+ */
+
 
 const getMovieById = async (movieId) => {
 
@@ -48,6 +66,13 @@ const getMovieById = async (movieId) => {
     return movie;
 }
 
+
+/**
+ * @param movieId -> id which will be used to identify the movie to be updated
+ * @param  movieId -> id which will be used to identify the movie to be updated
+ * @param  data -> object containing the updated movie 
+ * @returns -> return the new updated movie details
+ */
 const updateMovie = async (movieId,data) => {
     try{
         const movie = await Movie.findByIdAndUpdate(movieId,data,{new: true, runValidators: true});
@@ -65,6 +90,13 @@ const updateMovie = async (movieId,data) => {
         }
     }
 }
+
+/**
+ * 
+ * @param  filter -> filter will help us in filtering out data based on the conditionals 
+ * @returns -> returns an object containing all the movies fetched based on the filter
+ */
+
 
 const fetchMovies = async (filter) => {
     let query ={};

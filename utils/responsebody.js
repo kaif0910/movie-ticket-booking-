@@ -1,4 +1,4 @@
-const Movie = require("../models/movie.model")
+//this template will be used as a template for building error responses
 
 const errorResponseBody = {
     err: {},
@@ -7,6 +7,7 @@ const errorResponseBody = {
     success: false
 }
 
+//this template will be used as a template for building success responses
 const successResponseBody = {
     err: {},
     data: Movie,
