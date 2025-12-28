@@ -10,7 +10,7 @@ const errorResponseBody = {
 //this template will be used as a template for building success responses
 const successResponseBody = {
     err: {},
-    data: Movie,
+    data: {},
     message: "successfully processed the request",
     success: true
 }

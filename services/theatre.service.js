@@ -61,11 +61,37 @@ const getAllTheatres = async () => {
 
 }
 
+const updateMoviesInTheatres = async (theatreId,movieIds,insert) => {
+    const theatre = await Theatre.findById(theatreId);
+    if(!theatre){
+        return{
+            err: "no such theatre found",
+            code:404
+        };
+    }
+    if(insert){
+        //we need to add movies
+        movieIds.forEach(movieId => {
+            theatre.movies.push(movieId);
+        });
+    } else {
+        // we need to remove movies
+        let savedMovieIds = theatre.movies;
+        movieIds.forEach(movieId => {
+            savedMovieIds = savedMovieIds.filter(smi=> smi == movieId);
+        });
+        theatre.movies = savedMovieIds;
+    }
+    await theatre.save();
+    return theatre.populate("movies");
+}
+
 
 
 module.exports = {
     createTheatre,
     getTheatre,
     deleteTheatre,
-    getAllTheatres
+    getAllTheatres,
+    updateMoviesInTheatres
 }

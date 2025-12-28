@@ -70,10 +70,40 @@ const getAllTheatres = async (req,res) => {
 }
 
 
+/**
+ * 
+ * @param  theatreId -> unique id of the theatre for which we want to update movies 
+ * @param  movieIds -> array of the movie ids that are expected to be updated in theatre
+ * @param  insert -> boolean that tells whether we want insert movies or remove them
+ * @returns -> updated theatre object
+ */
+const updateMoviesInTheatres =async (req,res) => {
+    try {
+        const response = await theatreService.updateMoviesInTheatres(
+            req.params.theatreId,
+            req.body.movieIds,
+            req.body.insert
+        );
+        if(response.err){
+            errorResponseBody.err = response.err;
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data = response;
+        successResponseBody.message = "successfully added movies to the required theatre";
+        return res.status(200).json(successResponseBody);
+    } catch (error) {
+        console.log(error);
+        errorResponseBody.err = error;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
+
 
 module.exports = {
     createTheatre,
     getTheatre,
     deleteTheatre,
-    getAllTheatres
+    getAllTheatres,
+    updateMoviesInTheatres
 }
