@@ -31,6 +31,10 @@ const routes = (app) => {
     app.patch("/mba/api/v1/theatres/:theatreId",
         theatreController.updateTheatre
     );
+
+    app.put("/mba/api/v1/theatres/:theatreId",
+        theatreController.updateTheatre
+    );
 }
 
 module.exports = routes;

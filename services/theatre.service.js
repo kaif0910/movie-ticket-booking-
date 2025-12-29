@@ -122,6 +122,12 @@ const updateTheatre = async (theatreId,data) => {
         const response = await Theatre.findByIdAndUpdate(theatreId,data,{
             new: true,runValidators: true
         });
+        if(!response){
+            return {
+            err: "No record of a theatre found for the given id",
+            code: 404
+            }
+        }
         return response;
     } catch (error) {
         if(error.name === "ValidationError"){
