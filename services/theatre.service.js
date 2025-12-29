@@ -61,6 +61,29 @@ const getAllTheatres = async () => {
 
 }
 
+const getAllTheatresInCity = async (data) => {
+    try {
+        let query = {};
+        if(data && data.city){
+            //this checks whether city is present in query params or not 
+            query.city = data.city;
+        }
+        if(data && data.pincode){
+            //this checks whether pincode is present in query params or not
+            query.pincode = data.pincode;
+        }
+        if(data && data.name){
+            // this checks whether name is present in query params or not
+            query.name = data.name;
+        }
+        const response = await Theatre.find(query);
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 const updateMoviesInTheatres = async (theatreId,movieIds,insert) => {
     const theatre = await Theatre.findById(theatreId);
     if(!theatre){
@@ -93,5 +116,6 @@ module.exports = {
     getTheatre,
     deleteTheatre,
     getAllTheatres,
-    updateMoviesInTheatres
+    updateMoviesInTheatres,
+    getAllTheatresInCity
 }

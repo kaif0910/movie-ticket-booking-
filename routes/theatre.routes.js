@@ -23,6 +23,10 @@ const routes = (app) => {
         theatreMiddleware.validateUpdateMovies,
         theatreController.updateMoviesInTheatres
     );
+
+    app.get("/mba/api/v1/theatres",
+        theatreController.getAllTheatresInCity
+    );
 }
 
 module.exports = routes;

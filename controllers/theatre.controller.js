@@ -98,6 +98,22 @@ const updateMoviesInTheatres =async (req,res) => {
     }
 }
 
+const getAllTheatresInCity = async (req,res) => {
+    try {
+        let response = await theatreService.getAllTheatresInCity(req.query);
+        if(response.err){
+            errorResponseBody.err = response.err;
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data = response;
+        successResponseBody.message = "successfully fetched the theatres";
+        return res.status(200).json(successResponseBody);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 
 
 module.exports = {
@@ -105,5 +121,6 @@ module.exports = {
     getTheatre,
     deleteTheatre,
     getAllTheatres,
-    updateMoviesInTheatres
+    updateMoviesInTheatres,
+    getAllTheatresInCity
 }
