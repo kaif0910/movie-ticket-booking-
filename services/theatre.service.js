@@ -117,6 +117,24 @@ const updateMoviesInTheatres = async (theatreId,movieIds,insert) => {
     return theatre.populate("movies");
 }
 
+const updateTheatre = async (theatreId,data) => {
+    try {
+        const response = await Theatre.findByIdAndUpdate(theatreId,data,{
+            new: true,runValidators: true
+        });
+        return response;
+    } catch (error) {
+        if(error.name === "ValidationError"){
+            let err = {};
+            Object.keys(error.errors).forEach((key) => {
+                err[key] = error.errors[key].message;
+            });
+            return {err: err, code: 422};
+        }
+        throw error;
+    }
+}
+
 
 
 module.exports = {
@@ -125,5 +143,6 @@ module.exports = {
     deleteTheatre,
     getAllTheatres,
     updateMoviesInTheatres,
-    getAllTheatresInCity
+    getAllTheatresInCity,
+    updateTheatre
 }

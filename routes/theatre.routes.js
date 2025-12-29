@@ -27,6 +27,10 @@ const routes = (app) => {
     app.get("/mba/api/v1/theatres",
         theatreController.getAllTheatresInCity
     );
+
+    app.patch("/mba/api/v1/theatres/:theatreId",
+        theatreController.updateTheatre
+    );
 }
 
 module.exports = routes;
