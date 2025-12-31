@@ -39,6 +39,10 @@ const routes = (app) => {
     app.get("/mba/api/v1/theatres/:theatreId/movies",
         theatreController.getMovies
     )
+
+    app.get("/mba/api/v1/theatres/:theatreId/movies/:movieId",
+        theatreController.checkMovie
+    )
 }
 
 module.exports = routes;
