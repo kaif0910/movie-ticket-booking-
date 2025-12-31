@@ -1,4 +1,5 @@
 const Theatre = require("../models/theatre.model");
+const Movie = require("../models/movie.model");
 const { successResponseBody, errorResponseBody } = require("../utils/responsebody");
 
 const createTheatre = async (data) => {
@@ -77,6 +78,11 @@ const getAllTheatresInCity = async (data) => {
             // this checks whether name is present in query params or not
             query.name = data.name;
         }
+        
+        if(data && data.movieId){
+            let movie = await Movie.findById(data.movieId)
+            query.movies = {$all: movie};
+        }
         if(data && data.limit){
             pagination.limit = data.limit;
         }
@@ -93,7 +99,7 @@ const getAllTheatresInCity = async (data) => {
 }
 
 const updateMoviesInTheatres = async (theatreId,movieIds,insert) => {
-    try {
+    try {   
         if(insert){
             //we need to add movies
             await Theatre.updateOne(
@@ -106,7 +112,8 @@ const updateMoviesInTheatres = async (theatreId,movieIds,insert) => {
                 {_id: theatreId},
                 {$pull: {movies:{$in:movieIds}}}
             );
-        }const theatre = await Theatre.findById(theatreId);
+        }
+        const theatre = await Theatre.findById(theatreId);
         return theatre.populate("movies");
     } catch (error) {
         if(error.name = "TypeError"){
