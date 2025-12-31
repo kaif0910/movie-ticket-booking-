@@ -80,8 +80,7 @@ const getAllTheatresInCity = async (data) => {
         }
         
         if(data && data.movieId){
-            let movie = await Movie.findById(data.movieId)
-            query.movies = {$all: movie};
+            query.movies = {$all: data.movieId};
         }
         if(data && data.limit){
             pagination.limit = data.limit;
@@ -151,6 +150,22 @@ const updateTheatre = async (theatreId,data) => {
     }
 }
 
+const getMoviesInATheatre = async (theatreId) => {
+    try {
+        const theatre = await Theatre.findById(theatreId,{name: 1,movies: 1,address: 1}).populate("movies");
+        if(!theatre){
+            return {
+                err:"No theatre with the given id found",
+                code: 404
+            }
+        }
+        return theatre;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 
 
 module.exports = {
@@ -160,5 +175,6 @@ module.exports = {
     getAllTheatres,
     updateMoviesInTheatres,
     getAllTheatresInCity,
-    updateTheatre
+    updateTheatre,
+    getMoviesInATheatre
 }
