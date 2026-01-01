@@ -13,11 +13,16 @@ const userSchema = mongoose.Schema({
         type: String,
         required : true
     },
-    age:{
-        type: Number,
-        required : true     
-    }
-
+    userRole:{
+        type: String,
+        required : true,
+        default: "CUSTOMER"
+    },
+    userStatus:{
+        type: String,
+        required : true,
+        default: "APPROVED"
+    },
 },{timestamps:true});
 
 const User = mongoose.model("User",userSchema);//creates a new model

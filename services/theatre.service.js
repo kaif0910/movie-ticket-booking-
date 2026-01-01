@@ -5,7 +5,7 @@ const { successResponseBody, errorResponseBody } = require("../utils/responsebod
 const createTheatre = async (data) => {
     try {
         const response = await Theatre.create(data);
-        return response;
+        return response; 
     } catch (error) {
         if(error.name === "ValidationError"){
             let err = {};
