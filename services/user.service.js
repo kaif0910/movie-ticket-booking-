@@ -23,7 +23,7 @@ const getUserByEmail = async (email) => {
         let user = await User.findOne({
             email: email});
         if(!user){
-        throw {err: "User not found", code: 404};
+        throw {err: "User not found, please sign up", code: 404};
             }
         return user;
     } catch (error) {

@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 const userService = require("../services/user.service");
 const {successResponseBody, errorResponseBody } = require("../utils/responsebody");
@@ -34,10 +35,14 @@ const signin = async (req, res) => {
                 code:401
              };
         }
+        const token = jwt.sign({
+            id: user.id,
+            email: user.email
+        }, process.env.AUTH_KEY,{expiresIn: '1h'});
         successResponseBody.message = "successfully logged in";
         successResponseBody.data = {
             email: user.email,
-            token:"",
+            token: token
         }
         return res.status(200).json(successResponseBody);
     } catch (error) {
