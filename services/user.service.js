@@ -17,6 +17,23 @@ const createUser = async (data) => {
     }
 }
 
+const getUserByEmail = async (email) => {
+    // SignIn logic to be implemented
+    try {
+        let user = await User.findOne({
+            email: email});
+        if(!user){
+        throw {err: "User not found", code: 404};
+            }
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
+}
+
 module.exports ={
-    createUser
+    createUser,
+    getUserByEmail
 }
