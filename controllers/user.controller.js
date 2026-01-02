@@ -10,11 +10,12 @@ const signup = async (req,res) => {
             errorResponseBody.message = "validation error while creating user";
             return res.status(response.code).json(errorResponseBody);
         }
-        successResponseBody.data = User;
+        successResponseBody.data = response;
         successResponseBody.message = "successfully registered the user";
         return res.status(201).json(successResponseBody);
     }catch(err){
         console.log(err);
+        errorResponseBody.err = err;
         return res.status(500).json(errorResponseBody);
     }
 }
