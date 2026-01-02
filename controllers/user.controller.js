@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const userService = require("../services/user.service");
 const {successResponseBody, errorResponseBody } = require("../utils/responsebody");
 
-const createUser = async (req,res) => {
+const signup = async (req,res) => {
     try{
         let response = await userService.createUser(req.body);
         if(response.err){
@@ -20,5 +20,5 @@ const createUser = async (req,res) => {
 }
 
 module.exports ={
-    createUser
+    signup
 }
