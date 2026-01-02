@@ -1,21 +1,17 @@
-const badRequestResponse = {
-    success: false,
-    err: "",
-    data: {},
-    message: "Malformed Request | Bad Request"
-};
+const { errorResponseBody } = require("../utils/responsebody");
+
 const validateSignUpRequest = async (req,res,next) =>{
-    if(!req.body.username){
-        badRequestResponse.err ="The username is not present in the request";
-        return res.status(400).json(badRequestResponse);
+    if(!req.body.name){
+        errorResponseBody.err ="The name is not present in the request";
+        return res.status(400).json(errorResponseBody);
     }
     if(!req.body.password){
-        badRequestResponse.err = "The password is not present in the request";
-        return res.status(400).json(badRequestResponse);
+        errorResponseBody.err = "The password is not present in the request";
+        return res.status(400).json(errorResponseBody);
     }
     if(!req.body.email){
-        badRequestResponse.err = "The email is not present in the request";
-        return res.status(400).json(badRequestResponse);
+        errorResponseBody.err = "The email is not present in the request";
+        return res.status(400).json(errorResponseBody);
     }
     next();
 

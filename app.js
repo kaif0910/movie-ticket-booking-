@@ -5,7 +5,7 @@ const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const movieRoutes = require('./routes/movie.routes');
 const theatreRoutes = require("./routes/theatre.routes");
-const authRoutes = require("./routes/user.routes");
+const authRoutes = require("./routes/auth.routes");
 
 env.config();
 

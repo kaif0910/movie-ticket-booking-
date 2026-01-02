@@ -1,4 +1,4 @@
-const userController = require("../controllers/user.controller");
+const userController = require("../controllers/auth.controller");
 const middleware = require("../middlewares/auth.middilewares");   
 
 const routes = (app) =>{

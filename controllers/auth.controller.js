@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const userService = require("../services/user.service");
+const userService = require("../services/auth.service");
 const {successResponseBody, errorResponseBody } = require("../utils/responsebody");
 
 const signup = async (req,res) => {
@@ -13,9 +13,12 @@ const signup = async (req,res) => {
         successResponseBody.data = response;
         successResponseBody.message = "successfully registered the user";
         return res.status(201).json(successResponseBody);
-    }catch(err){
-        console.log(err);
-        errorResponseBody.err = err;
+    }catch(error){
+        if(error.err){
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }    
+        errorResponseBody.err = error;
         return res.status(500).json(errorResponseBody);
     }
 }
