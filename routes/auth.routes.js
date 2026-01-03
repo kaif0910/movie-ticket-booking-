@@ -10,6 +10,7 @@ const routes = (app) =>{
 
     app.post(
         "/mba/api/v1/auth/signin",
+        middleware.validateSignInRequest,
         userController.signin
     );
 }

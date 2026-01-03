@@ -17,6 +17,20 @@ const validateSignUpRequest = async (req,res,next) =>{
 
 }   
 
+const validateSignInRequest = async (req,res,next) =>{
+    if(!req.body.password){
+        errorResponseBody.err = "Please Enter your password";
+        return res.status(400).json(errorResponseBody);
+    }
+    if(!req.body.email){
+        errorResponseBody.err = "Please Enter your email";
+        return res.status(400).json(errorResponseBody);
+    }
+
+    next();
+}
+
 module.exports = {
-    validateSignUpRequest
+    validateSignUpRequest,
+    validateSignInRequest
 }
