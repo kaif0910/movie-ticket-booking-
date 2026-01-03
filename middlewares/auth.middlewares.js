@@ -1,0 +1,66 @@
+const jwt = require("jsonwebtoken");
+const userService = require("../services/user.service");
+const { errorResponseBody } = require("../utils/responsebody");
+
+const validateSignUpRequest = async (req,res,next) =>{
+    if(!req.body.name){
+        errorResponseBody.err ="The name is not present in the request";
+        return res.status(400).json(errorResponseBody);
+    }
+    if(!req.body.password){
+        errorResponseBody.err = "The password is not present in the request";
+        return res.status(400).json(errorResponseBody);
+    }
+    if(!req.body.email){
+        errorResponseBody.err = "The email is not present in the request";
+        return res.status(400).json(errorResponseBody);
+    }
+    next();
+
+}   
+
+const validateSignInRequest = async (req,res,next) =>{
+    if(!req.body.password){
+        errorResponseBody.err = "Please Enter your password";
+        return res.status(400).json(errorResponseBody);
+    }
+    if(!req.body.email){
+        errorResponseBody.err = "Please Enter your email";
+        return res.status(400).json(errorResponseBody);
+    }
+
+    next();//request is valid so we are calling the next function in the middleware chain
+}
+
+const isAuthenticated = async (req,res,next) =>{
+    // Authentication logic
+    try {
+        const token = req.headers['x-access-token'];//getting token from headers
+        if(!token){
+        errorResponseBody.err = "No token provided";
+        return res.status(403).json(errorResponseBody);
+        }
+        const response = jwt.verify(token, process.env.AUTH_KEY);
+        console.log(response);
+        if(!response){
+        errorResponseBody.err = "Failed to authenticate token";
+        return res.status(401).json(errorResponseBody);
+        }
+        const user = await userService.userById(response.userId);
+        req.userId = user._id;
+        next();
+    } catch (error) {
+        if(error.code == 404){
+            errorResponseBody.err ="user doesn't exist";
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
+module.exports = {
+    validateSignUpRequest,
+    validateSignInRequest,
+    isAuthenticated
+}
