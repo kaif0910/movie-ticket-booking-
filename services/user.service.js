@@ -58,8 +58,26 @@ const userById = async (userId) => {
     }
 }
 
+const updateUserRoleOrStatus = async (data,userId) => {
+    try {
+        let updateQuery = {};
+        if(data.userRole) updateQuery.userRole = data.userRole;
+        if(data.userStatus) updateQuery.userStatus = data.userStatus;
+        let response = await User.findOneAndUpdate({
+            _id: userId,
+        },updateQuery,{new: true, runValidators: true});
+
+        if(!response) throw {err: "No user found for the given id",code: 404};
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports ={
     createUser,
     getUserByEmail,
-    userById
+    userById,
+    updateUserRoleOrStatus
 }
