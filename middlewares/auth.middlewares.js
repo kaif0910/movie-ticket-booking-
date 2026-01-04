@@ -37,14 +37,13 @@ const isAuthenticated = async (req,res,next) =>{
     try {
         const token = req.headers['x-access-token'];//getting token from headers
         if(!token){
-        errorResponseBody.err = "No token provided";
-        return res.status(403).json(errorResponseBody);
+            errorResponseBody.err = "No token provided";
+            return res.status(403).json(errorResponseBody);
         }
         const response = jwt.verify(token, process.env.AUTH_KEY);
-        console.log(response);
         if(!response){
-        errorResponseBody.err = "Failed to authenticate token";
-        return res.status(401).json(errorResponseBody);
+            errorResponseBody.err = "Failed to authenticate token";
+            return res.status(401).json(errorResponseBody);
         }
         const user = await userService.userById(response.userId);//jwt token se userId aur email fetch karega jo token se aaega
         req.userId = user._id; //naya req object hoga jo response ban jaega  

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 const userService = require("../services/user.service");
 const {successResponseBody, errorResponseBody } = require("../utils/responsebody");
+const { findOneAndUpdate } = require("../models/theatre.model");
 
 const signup = async (req,res) => {
     try{
@@ -56,7 +57,30 @@ const signin = async (req, res) => {
     }
 }
 
-module.exports ={
+const resetPassword = async (req,res) => {
+    try {
+        const user = await userService.userById(req.userId);
+        const isOldPasswordCorrect = await user.isValidPassword(req.body.oldPassword);
+        if(!isOldPasswordCorrect){
+            throw {err: "please provide correct old password",code: 403};
+        }
+        user.password = req.body.newPassword;
+        await user.save();
+        successResponseBody.data = user;
+        successResponseBody.message ="successfully updated the password for the given user";
+        return res.status(200).json(successResponseBody);
+    } catch (error) {
+        if(error.err){
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
+module.exports = {
     signup,
-    signin
+    signin,
+    resetPassword
 }

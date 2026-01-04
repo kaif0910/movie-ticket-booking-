@@ -13,6 +13,12 @@ const routes = (app) =>{
         middleware.validateSignInRequest,
         userController.signin
     );
+
+    app.patch(
+        "/mba/api/v1/auth/resetPassword",
+        middleware.isAuthenticated,
+        userController.resetPassword
+    );
 }
 
 
