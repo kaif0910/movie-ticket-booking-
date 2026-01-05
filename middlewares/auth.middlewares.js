@@ -58,7 +58,7 @@ const isAuthenticated = async (req,res,next) =>{
     }
 }
 
-const validateResetPassword = (req,res,next) => {
+const validateResetPassword = async (req,res,next) => {
     if(!req.body.oldPassword){
         errorResponseBody.err = "please provide the old password";
         return res.status(400).json(errorResponseBody);
