@@ -7,10 +7,11 @@ const userMiddleware = require("../middlewares/user.middlewares");
 const routes = (app) => {
     app.patch(
         "/mba/api/v1/user/:userId",
-        authmiddleware.validateResetPassword,
+        authmiddleware.isAuthenticated,
         userMiddleware.validateUpdateUserRequest,
+        authmiddleware.isAdmin,
         userController.update
-    )
+    );
 }
 
 module.exports = routes;

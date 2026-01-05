@@ -1,5 +1,7 @@
 const userService = require("../services/user.service");
 const {errorResponseBody,successResponseBody} = require("../utils/responsebody");
+
+
 const update = async (req,res) => {
     try {
         const response = await userService.updateUserRoleOrStatus(req.body,req.params.userId);

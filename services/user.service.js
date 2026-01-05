@@ -49,7 +49,10 @@ const userById = async (userId) => {
     try {
         const user = await User.findById(userId);
         if(!user){
-            throw {err: "User not found", code: 404};
+            throw {
+                err: "User not found",
+                code: 404
+            };
         }
         return user;
     } catch (error) {
@@ -63,10 +66,7 @@ const updateUserRoleOrStatus = async (data,userId) => {
         let updateQuery = {};
         if(data.userRole) updateQuery.userRole = data.userRole;
         if(data.userStatus) updateQuery.userStatus = data.userStatus;
-        let response = await User.findOneAndUpdate({
-            _id: userId,
-        },updateQuery,{new: true, runValidators: true});
-
+        let response = await User.findByIdAndUpdate(userId,updateQuery,updateQuery,{new: true, runValidators: true});
         if(!response) throw {err: "No user found for the given id",code: 404};
         return response;
     } catch (error) {
