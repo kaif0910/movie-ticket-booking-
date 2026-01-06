@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const {USER_ROLE,USER_STATUS} = require("../utils/constants");
+const {STATUS_CODE} = require("../utils/constants");
 
 const createUser = async (data) => {
     try{
@@ -7,7 +8,7 @@ const createUser = async (data) => {
             if(data.userType || data.userType !== USER_STATUS.approved){
                 throw {
                     err: "we cannot set any other status for customer",
-                    code: 400
+                    code: STATUS_CODE.BAD_REQUEST
                 };
             }
         }
@@ -23,7 +24,7 @@ const createUser = async (data) => {
             Object.keys(error.errors).forEach((key) => {
                 err[key] = error.errors[key].message;
             });
-            throw {err: err, code: 422 };
+            throw {err: err, code: STATUS_CODE.UNPROCESSIBLE_ENTITY };
         }
         throw error;
     }
@@ -35,7 +36,7 @@ const getUserByEmail = async (email) => {
         let user = await User.findOne({
             email: email});
         if(!user){
-        throw {err: "User not found, please sign up", code: 404};
+        throw {err: "User not found, please sign up", code: STATUS_CODE.NOT_FOUND};
             }
         return user;
     } catch (error) {
@@ -51,7 +52,7 @@ const userById = async (userId) => {
         if(!user){
             throw {
                 err: "User not found",
-                code: 404
+                code: STATUS_CODE.NOT_FOUND
             };
         }
         return user;
@@ -76,7 +77,7 @@ const updateUserRoleOrStatus = async (data,userId) => {
             Object.keys(error.errors).forEach(key => {
                 err[key] = error.errors[key].message;
             });
-            throw {err: err,code: 400};
+            throw {err: err,code: STATUS_CODE.BAD_REQUEST};
         }
         throw error;
     }
