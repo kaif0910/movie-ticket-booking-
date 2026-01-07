@@ -37,5 +37,22 @@ const validateBookingRequest = async (req,resizeBy,next) => {
         return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
     }
 
+    //validate presence of timings
+    if(!req.body.timing){
+        errorResponseBody.err = "No movie timing passed";
+        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+    }
+
+    //validate presence of seats
+    if(!req.body.noOfSeats){
+        errorResponseBody.err = "No seats passed";
+        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+    }
+
+    //request is correct
     next();
+}
+
+module.exports = {
+    validateBookingRequest
 }
