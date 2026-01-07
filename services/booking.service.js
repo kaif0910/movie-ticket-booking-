@@ -14,10 +14,35 @@ const createBooking =async (data) => {
         });
         throw {err: err, code:STATUS.UNPROCESSIBLE_ENTITY};
        }
+       console.log(error);
        throw error; 
     }
 }
 
+const updateBooking =async (data,bookingId) =>{
+    try {
+        const response = await Booking.findByIdAndUpdate(data,bookingId,{
+            new: true, runValidators: true
+        });
+        if(!response){
+            throw {err: "no booking found with the given booking Id",code: STATUS.NOT_FOUND}
+        }
+        return response;
+    } catch (error) {
+        if(error.name == "ValidationError"){
+            let err = {};
+            Object.keys(error.errors).forEach(key => {
+                err[key] = error.errors[key].message;
+            });
+            throw {err: err, code:STATUS.UNPROCESSIBLE_ENTITY};
+        }
+        console.log(error);
+        throw error;
+    }
+}
+
+
 module.exports = {
-    createBooking
+    createBooking,
+    updateBooking
 }

@@ -9,6 +9,11 @@ const routes = (app) =>{
         authMiddleware.isAuthenticated,
         bookingMiddleware.validateBookingRequest,
         bookingController.create
+    );
+
+    app.patch(
+        "/mba/api/v1/bookings/:bookingId",
+        bookingController.update
     )
 }
 
