@@ -36,6 +36,14 @@ const update =async (req,res) => {
     }
 }
 
+const get = async (req,res) => {
+    try {
+        const response = await bookingService.getBookings
+    } catch (error) {
+        
+    }
+}
+
 
 module.exports = {
     create,

@@ -16,6 +16,11 @@ const routes = (app) =>{
         authMiddleware.isAuthenticated,
         bookingMiddleware.canChangeStatus,
         bookingController.update
+    );
+
+    app.get(
+        "/mba/api/v1/bookings",
+        
     )
 }
 
