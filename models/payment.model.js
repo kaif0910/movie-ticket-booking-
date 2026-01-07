@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {PAYMENT_STATUS} = require("../utils/constants");
 
 const paymentSchema = new mongoose.Schema({
     bookingId:{
@@ -14,9 +15,10 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: {
-            values: ["success","failed","pending"]
+            values: [PAYMENT_STATUS.success,PAYMENT_STATUS.failed,PAYMENT_STATUS.pending],
+            message: "Invalid payment status"
         },
-        default: "pending"
+        default: PAYMENT_STATUS.pending
     }
 },{timestamps: true});
 

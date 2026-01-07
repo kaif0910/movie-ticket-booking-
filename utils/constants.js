@@ -27,9 +27,17 @@ const BOOKING_STATUS = {
     processing: "IN-PROCESS"
 }
 
+const PAYMENT_STATUS = {
+    failed: "FAILED",
+    success: "SUCCESS",
+    pending: "PENDING"
+}
+
+
 module.exports = {
     USER_ROLE,
     USER_STATUS,
-    STATUS_CODE,
-    BOOKING_STATUS
+    STATUS: STATUS_CODE,
+    BOOKING_STATUS,
+    PAYMENT_STATUS
 }
