@@ -3,7 +3,7 @@ const { errorResponseBody } = require("../utils/responsebody");
 const ObjectId = require("mongoose").Types.ObjectId;
 const theatreService = require("../services/theatre.service");
 
-const validateBookingRequest = async (req,resizeBy,next) => {
+const validateBookingRequest = async (req,res,next) => {
     if(!req.body.theatreId){//validate the theatre id presence 
         errorResponseBody.err = "No theatre id provided";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);

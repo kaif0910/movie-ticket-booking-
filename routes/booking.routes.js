@@ -5,7 +5,10 @@ const authMiddleware = require('../middlewares/auth.middlewares');
 
 const routes = (app) =>{
     app.post(
-        "/mba/api/v1/booking",
+        "/mba/api/v1/bookings",
+        authMiddleware.isAuthenticated,
+        bookingMiddleware.validateBookingRequest,
+        bookingController.create
     )
 }
 

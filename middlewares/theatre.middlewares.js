@@ -37,7 +37,7 @@ const validateCreateRequest = async (req,res,next) => {
 }
 
 const validateUpdateMovies = async (req,res,next) => {
-    //validation of insert paramerer
+    //validation of insert parameter
     if(!req.body.insert==undefined){
         errorResponseBody.message = "the insert parameter is missing in the request";
         return res.status(400).json(errorResponseBody);

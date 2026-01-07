@@ -3,7 +3,7 @@ const Theatre = require("./theatre.model");
 const {BOOKING_STATUS} =require("../utils/constants");
 
 const bookingSchema = new mongoose.Schema({
-    TheatreId: {
+    theatreId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Theatre"
