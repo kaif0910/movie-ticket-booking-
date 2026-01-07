@@ -1,6 +1,7 @@
 const Theatre = require("../models/theatre.model");
 const Movie = require("../models/movie.model");
 const { successResponseBody, errorResponseBody } = require("../utils/responsebody");
+const {STATUS_CODE} = require("../utils/constants");
 
 const createTheatre = async (data) => {
     try {
@@ -12,7 +13,7 @@ const createTheatre = async (data) => {
             Object.keys(error.errors).forEach((key) => {
                 err[key] = error.errors[key].message;
             });
-            return {err: err, code: 422};
+            return {err: err, code: STATUS_CODE.UNPROCESSIBLE_ENTITY};
         }
         console.log(error);
         throw err;
@@ -25,7 +26,7 @@ const getTheatre =async (theatreId) => {
         if(!response){
             return {
             err: "no theatre found for the given id",
-            code: 404
+            code: STATUS_CODE.NOT_FOUND
         }
     }
         return response;
@@ -41,7 +42,7 @@ const deleteTheatre = async (theatreId) => {
         if(!response){
             return {
             err: "No record of a theatre found for the given id",
-            code: 404
+            code: STATUS_CODE.NOT_FOUND
             }
         }
         return response;
@@ -117,7 +118,7 @@ const updateMoviesInTheatres = async (theatreId,movieIds,insert) => {
     } catch (error) {
         if(error.name = "TypeError"){
             return {
-                code:404,
+                code:STATUS_CODE.NOT_FOUND,
                 err: "No theatre found for the given id"
             }
         }
@@ -134,7 +135,7 @@ const updateTheatre = async (theatreId,data) => {
         if(!response){
             return {
             err: "No record of a theatre found for the given id",
-            code: 404
+            code: STATUS_CODE.NOT_FOUND
             }
         }
         return response;
@@ -144,7 +145,7 @@ const updateTheatre = async (theatreId,data) => {
             Object.keys(error.errors).forEach((key) => {
                 err[key] = error.errors[key].message;
             });
-            return {err: err, code: 422};
+            return {err: err, code: STATUS_CODE.UNPROCESSIBLE_ENTITY};
         }
         throw error;
     }
