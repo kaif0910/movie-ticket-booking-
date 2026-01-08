@@ -68,10 +68,27 @@ const getAllBookings = async (req,res) => {
     }
 }
 
+const getBookingById =async (req,res) => {
+    try {
+        const response =await bookingService.getBookingById(req.userId,req.params.bookingId);
+        successResponseBody.data = response;
+        successResponseBody.message = "Successfully fetched the booking details";
+        return res.status(STATUS.OK).json(successResponseBody);
+    } catch (error) {
+        if(error.err){
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
+
 
 module.exports = {
     create,
     update,
     getBookings,
-    getAllBookings
+    getAllBookings,
+    getBookingById
 }

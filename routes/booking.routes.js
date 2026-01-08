@@ -29,6 +29,12 @@ const routes = (app) =>{
         authMiddleware.isAuthenticated,
         authMiddleware.isAdmin,
         bookingController.getAllBookings
+    );
+
+    app.get(
+        "/mba/api/v1/bookings/:bookingId",
+        authMiddleware.isAuthenticated,
+        bookingController.getBookingById
     )
 }
 
