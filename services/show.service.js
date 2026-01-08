@@ -1,9 +1,23 @@
 const Show = require("../models/show.model");
+const Theatre = require("../models/theatre.model");
 const {STATUS} = require("../utils/constants");
 
 
 const createShow = async (data) => {
     try {
+        const theatre = await Theatre.findById(data.theatreId);
+        if(!theatre){
+            throw{
+                err: "No theatre found",
+                code: STATUS.NOT_FOUND
+            }
+        }
+        if(theatre.movies.indexOf(data.movieId) == -1){
+            throw {
+                err: "Movie is currently not running in the theatre",
+                code: STATUS.NOT_FOUND
+            }
+        }
         const response = await Show.create(data);
         return response;
     } catch (error) {
