@@ -44,7 +44,16 @@ const validateCreateShowRequest = (req,res,next) => {
     next();
 }
 
+const validateUpdateShowRequest = (req,res,next) => {
+    if(req.body.theatreId || req.body.movieId){
+        errorResponseBody.err = "we cannot update theatreId or movieId for an already added show";
+        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+    }
+    next();
+}
+
 
 module.exports = {
-    validateCreateShowRequest
+    validateCreateShowRequest,
+    validateUpdateShowRequest
 }
