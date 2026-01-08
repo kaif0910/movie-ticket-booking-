@@ -56,6 +56,7 @@ const getBookings = async (data) => {
 const getAllBookings =async () => {
     try {
         const response = await Booking.find();
+        return response;
     } catch(error) {
         console.log(error);
         throw error;
