@@ -9,6 +9,11 @@ const routes = (app) => {
         authMiddleware.isAuthenticated,
         showMiddleware.validateCreateShowRequest,
         showController.create
+    );
+
+    app.get(
+        "/mba/api/v1/shows",
+        showController.getShows
     )
 }
 
