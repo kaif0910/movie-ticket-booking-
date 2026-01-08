@@ -5,7 +5,7 @@ const authMiddleware = require("../middlewares/auth.middlewares")
 const routes = (app) => {
     app.post("/mba/api/v1/theatres",
         authMiddleware.isAuthenticated,
-        authMiddleware.idAdminOrClient,
+        authMiddleware.isAdminOrClient,
         theatreMiddleware.validateCreateRequest,
         theatreController.createTheatre
     )
@@ -16,7 +16,7 @@ const routes = (app) => {
 
     app.delete("/mba/api/v1/theatres/:theatreId",
         authMiddleware.isAuthenticated,
-        authMiddleware.idAdminOrClient,
+        authMiddleware.isAdminOrClient,
         theatreController.deleteTheatre
     )
 

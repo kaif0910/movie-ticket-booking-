@@ -91,7 +91,7 @@ const isClient = async (req,res,next) => {
     next();
 }
 
-const idAdminOrClient = async (req,res,next) => {
+const isAdminOrClient = async (req,res,next) => {
     const user = await userService.userById(req.userId);
     if(user.userRole !== USER_ROLE.admin && user.userRole !== USER_ROLE.client){
         errorResponseBody.err ="User is neither a client nor an admin, cannot proceed with the request";
@@ -108,5 +108,5 @@ module.exports = {
     validateResetPassword,
     isAdmin,
     isClient,
-    idAdminOrClient
+    isAdminOrClient
 }
