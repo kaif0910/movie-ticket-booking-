@@ -7,6 +7,12 @@ const { errorResponseBody } = require("../utils/responsebody");
 const createPayment = async (data) => {
     try {
         const booking = await Booking.findById(data.bookingId);
+        if(booking.status == BOOKING_STATUS.successfull){
+            throw {
+                err: "Booking already done, cannot make a new payment against it",
+                code: STATUS.FORBIDDEN
+            }
+        }
         if(!booking){
             throw {
                 err:"No booking found",
