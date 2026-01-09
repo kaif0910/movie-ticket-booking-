@@ -24,7 +24,9 @@ const STATUS_CODE = {
 const BOOKING_STATUS = {
     cancelled: "CANCELLED",
     successfull: "SUCCESSFULL",
-    processing: "IN-PROCESS"
+    processing: "IN-PROCESS",
+    expired: "EXPIRED",
+    failed: "FAILED"
 }
 
 const PAYMENT_STATUS = {
