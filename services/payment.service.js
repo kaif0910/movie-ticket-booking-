@@ -67,7 +67,24 @@ const getPaymentById =async (paymentId) => {
     }
 }
 
+const getAllPayments = async () => {
+    try {
+        const response = await Payment.find();
+        if(!response){
+            throw{
+                err:"cant fetch the payments",
+                code: STATUS.NOT_FOUND
+            }
+        }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createPayment,
-    getPaymentById
+    getPaymentById,
+    getAllPayments
 }

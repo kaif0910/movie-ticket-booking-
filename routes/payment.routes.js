@@ -15,7 +15,14 @@ const routes = (app) => {
         "/mba/api/v1/payments/:paymentId",
         authMiddleware.isAuthenticated,
         paymentController.getPaymentDetailsById
-    )
+    );
+
+    app.get(
+        "/mba/api/v1/payments",
+        authMiddleware.isAuthenticated,
+        authMiddleware.isAdmin,
+        paymentController.getAllPayments
+    );
 }
 
 module.exports = routes;
