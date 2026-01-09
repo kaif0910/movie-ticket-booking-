@@ -45,6 +45,23 @@ const createPayment = async (data) => {
     }
 }
 
+const getPaymentById =async (paymentId) => {
+    try {
+        const response = await Payment.findById(paymentId).populate("bookingId");
+        if(!response){
+            throw{
+                err: "No payment record found",
+                code: STATUS.NOT_FOUND
+            }
+        }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
-    createPayment
+    createPayment,
+    getPaymentById
 }
