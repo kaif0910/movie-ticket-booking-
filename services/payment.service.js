@@ -30,6 +30,7 @@ const createPayment = async (data) => {
             payment.status = PAYMENT_STATUS.failed;
             booking.status = BOOKING_STATUS.cancelled;
             await booking.save();
+            await payment.save();
             return booking;
         }else{
             payment.status = PAYMENT_STATUS.success;
