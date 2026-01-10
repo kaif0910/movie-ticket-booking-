@@ -83,8 +83,24 @@ const getAllPayments = async () => {
     }
 }
 
+const getAllPaymentsOfUser =async (userId) => {
+    try {
+        const response = await Payments.findById(userId);
+        if(!response){
+            throw{
+                err: "no user found",
+                code: STATUS.NOT_FOUND
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createPayment,
     getPaymentById,
-    getAllPayments
+    getAllPayments,
+    getAllPaymentsOfUser
 }

@@ -1,10 +1,20 @@
 const paymentService = require("../services/payment.service");
-const {STATUS} = require("../utils/constants");
+const {STATUS,BOOKING_STATUS} = require("../utils/constants");
 const { successResponseBody,errorResponseBody } = require("../utils/responsebody");
 
 const create = async (req,res) => {
     try {
         const response = await paymentService.createPayment(req.body);
+        if(response.status == BOOKING_STATUS.expired){
+            errorResponseBody.err = "The payment took more than 5 minutesto get processed";
+            errorResponseBody.data = response;
+            return res.status(STATUS.GONE).json(errorResponseBody);
+        }
+        if(response.status == BOOKING_STATUS.cancelled){
+            errorResponseBody.err = "The payment failed due to some reason ,booking was not successfull, please try again";;
+            errorResponseBody.data = response;
+            return res.status(STATUS.PAYMENT_REQUIRED).json(errorResponseBody);
+        }
         successResponseBody.data = response;
         successResponseBody.message = "Successfully made the payment";
         return res.status(STATUS.CREATED).json(successResponseBody);
@@ -49,6 +59,14 @@ const getAllPayments = async(req,res) => {
         return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 
+}
+
+const getAllPaymentsOfUser = async (req,res) => {
+    try {
+        const response = await paymentService.getAllPaymentsOfUser()
+    } catch (error) {
+        
+    }
 }
 
 module.exports = {
