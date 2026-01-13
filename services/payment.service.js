@@ -1,7 +1,8 @@
 const Payment = require("../models/payment.model");
 const Booking = require("../models/booking.model");
-const {STATUS,BOOKING_STATUS,PAYMENT_STATUS} = require("../utils/constants");
+const {STATUS,BOOKING_STATUS,PAYMENT_STATUS, USER_ROLE} = require("../utils/constants");
 const { errorResponseBody } = require("../utils/responsebody");
+const User = require("../models/user.model");
 
 
 const createPayment = async (data) => {
@@ -67,31 +68,16 @@ const getPaymentById =async (paymentId) => {
     }
 }
 
-const getAllPayments = async () => {
+const getAllPayments = async (userId) => {
     try {
-        const response = await Payment.find();
-        if(!response){
-            throw{
-                err:"cant fetch the payments",
-                code: STATUS.NOT_FOUND
-            }
+        const user = await User.findById(userId);
+        let filter = {};
+        if(user.userRole != USER_ROLE.admin){
+            filter.userId = user.userId;//problem
         }
-        return response;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
-
-const getAllPaymentsOfUser =async (userId) => {
-    try {
-        const response = await Payments.findById(userId);
-        if(!response){
-            throw{
-                err: "no user found",
-                code: STATUS.NOT_FOUND
-            }
-        }
+        const bookings = await Booking.find(filter, {_id: 1});
+        const payments = await Payment.find({booking: {$in: bookings}});
+        return payments;
     } catch (error) {
         console.log(error);
         throw error;
@@ -101,6 +87,5 @@ const getAllPaymentsOfUser =async (userId) => {
 module.exports = {
     createPayment,
     getPaymentById,
-    getAllPayments,
-    getAllPaymentsOfUser
+    getAllPayments
 }

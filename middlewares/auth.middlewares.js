@@ -47,7 +47,7 @@ const isAuthenticated = async (req,res,next) =>{
             return res.status(401).json(errorResponseBody);
         }
         const user = await userService.userById(response.userId);//jwt token se userId aur email fetch karega jo token se aaega
-        req.userId = user._id; //naya req object hoga jo response ban jaega  
+        req.user = user; //naya req object hoga jo response ban jaega  
         next();//next middleware call after successfull authentication
     } catch (error) {
         if(error.code == 404){

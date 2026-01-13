@@ -44,9 +44,9 @@ const getPaymentDetailsById = async (req,res) => {
     }
 }
 
-const getAllPayments = async(req,res) => {
+const getAllPayments = async (req,res) => {
     try {
-        const response = await paymentService.getAllPayments();
+        const response = await paymentService.getAllPayments(req.user);// can be a problem
         successResponseBody.data = response;
         successResponseBody.message = "Successfully fetched all the payments";
         return res.status(STATUS.OK).json(successResponseBody);
@@ -61,13 +61,6 @@ const getAllPayments = async(req,res) => {
 
 }
 
-const getAllPaymentsOfUser = async (req,res) => {
-    try {
-        const response = await paymentService.getAllPaymentsOfUser()
-    } catch (error) {
-        
-    }
-}
 
 module.exports = {
     create,

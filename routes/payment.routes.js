@@ -20,7 +20,6 @@ const routes = (app) => {
     app.get(
         "/mba/api/v1/payments",
         authMiddleware.isAuthenticated,
-        authMiddleware.isAdmin,
         paymentController.getAllPayments
     );
 }
