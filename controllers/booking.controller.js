@@ -5,8 +5,8 @@ const bookingService = require("../services/booking.service");
 
 const create =async (req,res) =>{
     try {
-        let userId = req.userId;
-        const response =await bookingService.createBooking({...req.body, userId: userId});
+        let userId = req.user._id;
+        const response =await bookingService.createBooking({...req.body, userId: userId});//addition of key values and passing as an object
         successResponseBody.message = "Successfully created the booking";
         successResponseBody.data = response;
         return res.status(STATUS.CREATED).json(successResponseBody);

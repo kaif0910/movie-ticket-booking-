@@ -73,10 +73,12 @@ const getAllPayments = async (userId) => {
         const user = await User.findById(userId);
         let filter = {};
         if(user.userRole != USER_ROLE.admin){
-            filter.userId = user.userId;//problem
+            filter.userId = userId;//problem
         }
         const bookings = await Booking.find(filter, {_id: 1});
-        const payments = await Payment.find({booking: {$in: bookings}});
+        const payments = await Payment.find({
+            bookingId: {$in: bookings}
+        });
         return payments;
     } catch (error) {
         console.log(error);
