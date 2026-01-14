@@ -5,7 +5,7 @@ const showMiddleware = require("../middlewares/show.middlewares");
 
 const routes = (app) => {
     app.post(
-        "/mba/api/v1/show",
+        "/mba/api/v1/shows",
         authMiddleware.isAuthenticated,
         showMiddleware.validateCreateShowRequest,
         showController.create

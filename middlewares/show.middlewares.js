@@ -9,7 +9,7 @@ const validateCreateShowRequest = (req,res,next) => {
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
 
-    if(!ObjectId.isValid(theatreId)){
+    if(!ObjectId.isValid(req.body.theatreId)){
         errorResponseBody.err = "Invalid theatreId provided";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
@@ -20,7 +20,7 @@ const validateCreateShowRequest = (req,res,next) => {
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     } 
 
-    if(!ObjectId.isValid(movieId)){
+    if(!ObjectId.isValid(req.body.movieId)){
         errorResponseBody.err = "Invalid movieId provided";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
