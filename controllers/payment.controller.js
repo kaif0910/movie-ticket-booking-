@@ -2,7 +2,6 @@ const axios = require("axios");
 const paymentService = require("../services/payment.service");
 const {STATUS,BOOKING_STATUS} = require("../utils/constants");
 const { successResponseBody,errorResponseBody } = require("../utils/responsebody");
-const axios = require("axios");
 const User = require("../models/user.model");
 const Movie = require("../models/movie.model");
 const Theatre = require("../models/theatre.model");
@@ -28,9 +27,9 @@ const create = async (req,res) => {
         axios.post(process.env.NOTI_SERVICE + "/notiservice/api/v1/notifications",{
             subject: "Your Booking is Successful",
             recepientEmails: [user.email],
-            content: `Your booking for ${movie.name} in ${theatre.name} for ${response.noOfSeats} on ${response.timing} is Successful. Your booking id is ${response.id}`
+            content: `Your booking for ${movie.name} in ${theatre.name} for ${response.noOfSeats} Seats on ${response.timing} is Successful. Your booking id is ${response.id}`
         });
-        
+
         return res.status(STATUS.CREATED).json(successResponseBody);
     } catch (error) {
          if(error.err){

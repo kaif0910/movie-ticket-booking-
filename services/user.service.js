@@ -1,34 +1,54 @@
 const User = require("../models/user.model");
 const {USER_ROLE,USER_STATUS} = require("../utils/constants");
-const {STATUS_CODE} = require("../utils/constants");
+const {STATUS} = require("../utils/constants");
 
 const createUser = async (data) => {
-    try{
-        if(!data.userRole || data.userRole == USER_ROLE.customer){
-            if(data.userType || data.userType !== USER_STATUS.approved){
+    try {
+        // Case 1: customer (or role not provided)
+        if (!data.userRole || data.userRole === USER_ROLE.customer) {
+
+            // customer must NOT set status manually
+            if (
+                data.userStatus &&
+                data.userStatus !== USER_STATUS.approved
+            ) {
                 throw {
-                    err: "we cannot set any other status for customer",
-                    code: STATUS_CODE.BAD_REQUEST
+                    err: "Customer cannot set custom status",
+                    code: STATUS.BAD_REQUEST
                 };
             }
+
+            // enforce approved status for customer
+            data.userStatus = USER_STATUS.approved;
         }
-        if(data.userRole && data.userRole !== USER_ROLE.customer){
+
+        // Case 2: non-customer (admin, theatre-owner, etc.)
+        if (data.userRole && data.userRole !== USER_ROLE.customer) {
             data.userStatus = USER_STATUS.pending;
         }
+
         const response = await User.create(data);
-        return response ;
-    } catch(error){
+        return response;
+
+    } catch (error) {
         console.log(error);
-        if(error.name === "ValidationError"){
+
+        if (error.name === "ValidationError") {
             let err = {};
             Object.keys(error.errors).forEach((key) => {
                 err[key] = error.errors[key].message;
             });
-            throw {err: err, code: STATUS_CODE.UNPROCESSIBLE_ENTITY };
+
+            throw {
+                err,
+                code: STATUS.UNPROCESSIBLE_ENTITY
+            };
         }
+
         throw error;
     }
-}
+};
+
 
 const getUserByEmail = async (email) => {
     // SignIn logic to be implemented
@@ -36,7 +56,7 @@ const getUserByEmail = async (email) => {
         let user = await User.findOne({
             email: email});
         if(!user){
-        throw {err: "User not found, please sign up", code: STATUS_CODE.NOT_FOUND};
+        throw {err: "User not found, please sign up", code: STATUS.NOT_FOUND};
             }
         return user;
     } catch (error) {
@@ -52,7 +72,7 @@ const userById = async (userId) => {
         if(!user){
             throw {
                 err: "User not found",
-                code: STATUS_CODE.NOT_FOUND
+                code: STATUS.NOT_FOUND
             };
         }
         return user;
@@ -77,7 +97,7 @@ const updateUserRoleOrStatus = async (data,userId) => {
             Object.keys(error.errors).forEach(key => {
                 err[key] = error.errors[key].message;
             });
-            throw {err: err,code: STATUS_CODE.BAD_REQUEST};
+            throw {err: err,code: STATUS.BAD_REQUEST};
         }
         throw error;
     }
