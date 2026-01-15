@@ -5,7 +5,7 @@ const {errorResponseBody, successResponseBody} =require("../utils/responsebody")
 
 const createTheatre = async (req,res) => {
     try {
-        let response = await theatreService.createTheatre(req.body);
+        let response = await theatreService.createTheatre({...req.body, owner: req.user});
         if(response.err){
             errorResponseBody.err = response.err;
             errorResponseBody.message = "validation failed on few parameters of the request body";
