@@ -1,46 +1,52 @@
 const mongoose = require("mongoose");
-const Theatre = require("./theatre.model");
-const {BOOKING_STATUS} =require("../utils/constants");
+const { BOOKING_STATUS } = require("../utils/constants");
 
-const bookingSchema = new mongoose.Schema({
+const bookingSchema = new mongoose.Schema(
+  {
     theatreId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Theatre"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Theatre",
+      required: true
     },
-    movieId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Movie"
+
+    showId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Show",
+      required: true
     },
+
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
-    timing: {
-        type: String,
-        required: true
+
+    seats: {
+      type: [String], // ["A1", "A2"]
+      required: true
     },
-    noOfSeats: {
-        type: Number,
-        required: true
-    },
+
     totalCost: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true
     },
+
+    paymentId: {
+      type: String
+    },
+
     status: {
-        type: String,
-        required: true,
-        enum:{
-            values: [BOOKING_STATUS.processing,BOOKING_STATUS.cancelled,BOOKING_STATUS.successfull,BOOKING_STATUS.expired],
-            message: "Invalid booking status",
-        },
-        default: BOOKING_STATUS.processing
+      type: String,
+      enum: [
+        BOOKING_STATUS.processing,
+        BOOKING_STATUS.cancelled,
+        BOOKING_STATUS.successfull,
+        BOOKING_STATUS.expired
+      ],
+      default: BOOKING_STATUS.processing
     }
-},{timestamps: true})
+  },
+  { timestamps: true }
+);
 
-const Booking = mongoose.model("Booking",bookingSchema);
-
-module.exports = Booking;
+module.exports = mongoose.model("Booking", bookingSchema);
