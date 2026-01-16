@@ -47,10 +47,6 @@ const audiSchema = mongoose.Schema({
     type: [rowSchema],
     required: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+},{timestamps: true});
 
 module.exports = mongoose.model("Audi",audiSchema)
