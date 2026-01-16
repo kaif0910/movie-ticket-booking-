@@ -33,8 +33,13 @@ app.get("/",(req,res) => {
 app.listen(process.env.PORT,async () =>{
     console.log(`connected to ${process.env.PORT}`); //callback after successful listen 
     try{
-        await mongoose.connect(process.env.DB_URL); //connects to the mongo server
-        console.log("db connected");
+        if(process.env.NODE_ENV == "Production"){
+            await mongoose.connect(process.env.PROD_DB_URL); 
+            console.log("db connected");
+        }else{
+            await mongoose.connect(process.env.DB_URL); //connects to the mongo server
+            console.log("db connected");
+        }
     }catch(err){
         console.log("not able to connect to db",err);
     }
