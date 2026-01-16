@@ -2,7 +2,7 @@ const Show = require("../models/show.model");
 const Theatre = require("../models/theatre.model");
 const {STATUS} = require("../utils/constants");
 
-
+//search and creation of the shows in a theatre for a particular movie (running shows).
 const createShow = async (data) => {
     try {
         const theatre = await Theatre.findById(data.theatreId);
