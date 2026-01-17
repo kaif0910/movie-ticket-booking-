@@ -7,7 +7,7 @@ const movieSchema = mongoose.Schema({
     },
     description :{
         type: String,
-        required : true
+        required : true,
     },
     casts:{
         type:[String],
@@ -16,6 +16,10 @@ const movieSchema = mongoose.Schema({
     trailerUrl:{
         type: String,
         required : true
+    },
+    director:{
+        type: String,
+        required: true
     },
     language:{
         type:String,
