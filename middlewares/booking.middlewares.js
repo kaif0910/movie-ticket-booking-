@@ -21,32 +21,26 @@ const validateBookingRequest = async (req,res,next) => {
         return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
     }
 
-    //validate movie presence 
-    if(!req.body.movieId){
-        errorResponseBody.err = "No movie id provided";
+    //validate show presence 
+    if(!req.body.showId){
+        errorResponseBody.err = "No show id provided";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
 
-    if(!ObjectId.isValid(req.body.movieId)){
-        errorResponseBody.err = "Invalid movieId format";
+    if(!ObjectId.isValid(req.body.showId)){
+        errorResponseBody.err = "Invalid showId format";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
 
-    //check if movie is running in that theatre
-    if(!theatre.movies.includes(req.body.movieId)){
-        errorResponseBody.err ="No movie listed in the given theatre";
+    //check if show is present in that theatre
+    if(!theatre.shows.includes(req.body.showId)){
+        errorResponseBody.err ="No show listed in the given theatre";
         return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
     }
 
-    //validate presence of timings
-    if(!req.body.timing){
-        errorResponseBody.err = "No movie timing passed";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
-
     //validate presence of seats
-    if(!req.body.noOfSeats){
-        errorResponseBody.err = "No seats passed";
+    if(!req.body.seats || req.body.seats.length == 0){
+        errorResponseBody.err = "No seats selected for booking";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
 

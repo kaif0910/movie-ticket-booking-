@@ -8,11 +8,11 @@ const showSchema = new mongoose.Schema(
       required: true
     },
 
-    audiId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Audi",
-      required: true
-    },
+    // audiId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Audi",
+    //   required: true
+    // },
 
     movieId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,20 +20,25 @@ const showSchema = new mongoose.Schema(
       required: true
     },
 
-    startTime: {
-      type: Date,
-      required: true
-    },
+    // startTime: {
+    //   type: Date,
+    //   required: true
+    // },
 
-    endTime: {
-      type: Date,
-      required: true
-    },
+    // endTime: {
+    //   type: Date,
+    //   required: true
+    // },
 
-    priceMap: {
-      GOLD: { type: Number, required: true },
-      SILVER: { type: Number, required: true },
-      PLATINUM: { type: Number, required: true }
+    // priceMap: {
+    //   GOLD: { type: Number, required: true },
+    //   SILVER: { type: Number, required: true },
+    //   PLATINUM: { type: Number, required: true }
+    // },
+
+    timing:{
+        type: String,
+        required: true
     },
 
     format: {
