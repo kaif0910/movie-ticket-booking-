@@ -57,6 +57,15 @@ const getShows = async (data) => {
     }
 }
 
+const getShowById = async (showId) => {
+    try {
+        const response = await Show.findById(showId);       
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 const deleteShow =async (showId) => {
     try {
         const response = await Show.findByIdAndDelete(showId);
@@ -105,5 +114,5 @@ module.exports = {
     getShows,
     deleteShow,
     updateShow,
-    updateShow
+    getShowById 
 }

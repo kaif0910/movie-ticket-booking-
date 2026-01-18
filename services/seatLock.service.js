@@ -2,12 +2,12 @@ const redisClient = require("../utils/redisClient");
 
 const LOCK_TTL = 420; // 7 minutes
 
-const lockSeats = async (showId, seatIds, userId) => {
-  const keys = seatIds.map(
+const lockSeats = async (showId, seats, userId) => {
+  const keys = seats.map(
     seat => `seatlock:${showId}:${seat}`
   );
 
-  // 1️⃣ Check if any seat is already locked
+  //  Check if any seat is already locked
   for (const key of keys) {
     const exists = await redisClient.exists(key);
     if (exists) {
@@ -15,7 +15,7 @@ const lockSeats = async (showId, seatIds, userId) => {
     }
   }
 
-  // 2️⃣ Lock all seats
+  //  Lock all seats
   for (const key of keys) {
     await redisClient.set(
       key,
@@ -27,8 +27,8 @@ const lockSeats = async (showId, seatIds, userId) => {
   return true;
 };
 
-const unlockSeats = async (showId, seatIds) => {
-  for (const seat of seatIds) {
+const unlockSeats = async (showId, seats) => {
+  for (const seat of seats) {
     await redisClient.del(`seatlock:${showId}:${seat}`);
   }
 };
