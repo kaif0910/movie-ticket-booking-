@@ -2,10 +2,10 @@ const seatLockService = require("../services/seatLock.service");
 
 const lockSeats = async (req, res) => {
   try {
-    const { showId, seatIds } = req.body;
+    const { showId, seats } = req.body;
     const userId = req.user.id;
 
-    await seatLockService.lockSeats(showId, seatIds, userId);
+    await seatLockService.lockSeats(showId, seats, userId);
 
     res.status(200).json({
       message: "Seats locked successfully",
