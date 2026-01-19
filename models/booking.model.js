@@ -23,7 +23,7 @@ const bookingSchema = new mongoose.Schema(
 
     seats: {
       type: [String], // ["A1", "A2"]
-      required: true
+      required: true,
     },
 
     totalCost: {
@@ -47,6 +47,11 @@ const bookingSchema = new mongoose.Schema(
     }
   },
   { timestamps: true }
+);
+
+bookingSchema.index(
+  { showId: 1, seats: 1 },
+  { unique: true }
 );
 
 module.exports = mongoose.model("Booking", bookingSchema);

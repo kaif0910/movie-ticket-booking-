@@ -44,7 +44,9 @@ const createBooking = async (data) => {
     return booking;
 
   } catch (error) {
-    console.error(error);
+    if(error.code === 11000){
+        throw {err: "One or more seats already booked", code: STATUS.CONFLICT};
+    }
     throw error;
   }
 };
