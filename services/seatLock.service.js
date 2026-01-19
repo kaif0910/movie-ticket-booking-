@@ -5,7 +5,7 @@ const LOCK_TTL = 420; // 7 minutes
 
 const lockSeats = async (showId, seats, userId) => {
 
-  // 1️⃣ HARD BLOCK: already booked seats (PERMANENT)
+  // HARD BLOCK: already booked seats (PERMANENT)
   const alreadyBooked = await Booking.findOne({
     showId,
     seats: { $in: seats },
@@ -21,7 +21,7 @@ const lockSeats = async (showId, seats, userId) => {
     };
   }
 
-  // 2️⃣ ATOMIC Redis locking (NO race condition)
+  // ATOMIC Redis locking (NO race condition)
   for (const seat of seats) {
     const key = `seatlock:${showId}:${seat}`;
 
