@@ -11,10 +11,20 @@ const lockSeats = async (req, res) => {
       message: "Seats locked successfully",
       expiresIn: "7 minutes"
     });
-  } catch (err) {
-    res.status(409).json({
-      error: err.message
+  } catch (error) {
+    console.error(error);
+
+  if (error.err && error.code) {
+    return res.status(error.code).json({
+      success: false,
+      message: error.err
     });
+  }
+
+  return res.status(500).json({
+    success: false,
+    message: "Internal server error"
+  });
   }
 };
 

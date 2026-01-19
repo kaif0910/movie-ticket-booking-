@@ -1,27 +1,45 @@
 const redisClient = require("../utils/redisClient");
+const Booking = require("../models/booking.model");
 
 const LOCK_TTL = 420; // 7 minutes
 
 const lockSeats = async (showId, seats, userId) => {
-  const keys = seats.map(
-    seat => `seatlock:${showId}:${seat}`
-  );
 
-  //  Check if any seat is already locked
-  for (const key of keys) {
-    const exists = await redisClient.exists(key);
-    if (exists) {
-      throw new Error("One or more seats already locked");
+  // 1️⃣ HARD BLOCK: already booked seats (PERMANENT)
+  const alreadyBooked = await Booking.findOne({
+    showId,
+    seats: { $in: seats },
+    status: {
+      $nin: ["cancelled", "expired"]
     }
+  });
+
+  if (alreadyBooked) {
+    throw {
+      err: "One or more seats are already booked",
+      code: 409
+    };
   }
 
-  //  Lock all seats
-  for (const key of keys) {
-    await redisClient.set(
+  // 2️⃣ ATOMIC Redis locking (NO race condition)
+  for (const seat of seats) {
+    const key = `seatlock:${showId}:${seat}`;
+
+    const result = await redisClient.set(
       key,
       JSON.stringify({ userId }),
-      { EX: LOCK_TTL }
+      {
+        NX: true,   // 🔥 atomic
+        EX: LOCK_TTL
+      }
     );
+
+    if (!result) {
+      throw {
+        err: "One or more seats are already locked",
+        code: 409
+      };
+    }
   }
 
   return true;
