@@ -1,101 +1,83 @@
 const Payment = require("../models/payment.model");
 const Booking = require("../models/booking.model");
-const {STATUS,BOOKING_STATUS,PAYMENT_STATUS, USER_ROLE} = require("../utils/constants");
-const { errorResponseBody } = require("../utils/responsebody");
-const User = require("../models/user.model");
-const Show = require("../models/show.model");
-
+const redisClient = require("../utils/redisClient");
+const {
+  STATUS,
+  BOOKING_STATUS,
+  PAYMENT_STATUS
+} = require("../utils/constants");
 
 const createPayment = async (data) => {
-    try {
-        const booking = await Booking.findById(data.bookingId);
-        const show = await Show.findOne({
-            movieId: booking.movieId,
-            theatreId: booking.theatreId,
-            timing: booking.timing
-        });
-        if(booking.status == BOOKING_STATUS.successfull){
-            throw {
-                err: "Booking already done, cannot make a new payment against it",
-                code: STATUS.FORBIDDEN
-            }
-        }
-        if(!booking){
-            throw {
-                err:"No booking found",
-                code: STATUS.NOT_FOUND
-            }
-        }
-        let bookingTime = booking.createdAt;
-        let currentTime = Date.now();
-        //calculate how many minutes are remaining
-        let minutes = Math.floor(((currentTime-bookingTime)/1000)/60);
-        if(minutes>5){
-            booking.status = BOOKING_STATUS.expired;
-            await booking.save();
-            return booking;
-        }
-        const payment = await Payment.create({
-            bookingId: data.bookingId,
-            amount: data.amount
-        });
-        if(payment.amount!=booking.totalCost){
-            payment.status = PAYMENT_STATUS.failed;
-            booking.status = BOOKING_STATUS.cancelled;
-            await booking.save();
-            await payment.save();
-            return booking;
-        }else{
-            payment.status = PAYMENT_STATUS.success;
-            booking.status = BOOKING_STATUS.successfull;
-            show.noOfSeats = show.noOfSeats - booking.noOfSeats;
-            await show.save();
-            await booking.save();
-            await payment.save();
-            return booking;
-        }
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+  try {
+    const booking = await Booking.findById(data.bookingId);
 
-const getPaymentById =async (paymentId) => {
-    try {
-        const response = await Payment.findById(paymentId).populate("bookingId");
-        if(!response){
-            throw{
-                err: "No payment record found",
-                code: STATUS.NOT_FOUND
-            }
-        }
-        return response;
-    } catch (error) {
-        console.log(error);
-        throw error;
+    if (!booking) {
+      throw {
+        err: "No booking found",
+        code: STATUS.NOT_FOUND
+      };
     }
-}
 
-const getAllPayments = async (userId) => {
-    try {
-        const user = await User.findById(userId);
-        let filter = {};
-        if(user.userRole != USER_ROLE.admin){
-            filter.userId = userId;//problem
-        }
-        const bookings = await Booking.find(filter, {_id: 1});
-        const payments = await Payment.find({
-            bookingId: {$in: bookings}
-        });
-        return payments;
-    } catch (error) {
-        console.log(error);
-        throw error;
+    //  Booking already completed
+    if (booking.status === BOOKING_STATUS.successfull) {
+      throw {
+        err: "Booking already completed",
+        code: STATUS.FORBIDDEN
+      };
     }
-}
+
+    //  Check booking expiry (7 minutes)
+    const now = Date.now();
+    const createdAt = booking.createdAt.getTime();
+    const minutesPassed = Math.floor((now - createdAt) / 60000);
+
+    if (minutesPassed > 7) {
+      booking.status = BOOKING_STATUS.expired;
+      await booking.save();
+
+      throw {
+        err: "Booking expired",
+        code: STATUS.BAD_REQUEST
+      };
+    }
+
+    //  Validate payment amount
+    const payment = await Payment.create({
+      bookingId: booking._id,
+      amount: data.amount,
+      status: PAYMENT_STATUS.pending
+    });
+
+    if (payment.amount !== booking.totalCost) {
+      payment.status = PAYMENT_STATUS.failed;
+      booking.status = BOOKING_STATUS.cancelled;
+
+      await payment.save();
+      await booking.save();
+
+      return booking;
+    }
+
+    //  SUCCESS PAYMENT
+    payment.status = PAYMENT_STATUS.success;
+    booking.status = BOOKING_STATUS.successfull;
+
+    await payment.save();
+    await booking.save();
+
+    //  RELEASE REDIS SEAT LOCKS 🔥
+    for (const seat of booking.seats) {
+      await redisClient.del(`seatlock:${booking.showId}:${seat}`);
+    }
+
+    return booking;
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 module.exports = {
-    createPayment,
-    getPaymentById,
-    getAllPayments
-}
+  createPayment
+};

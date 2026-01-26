@@ -1,70 +1,70 @@
-const {STATUS, USER_ROLE, BOOKING_STATUS} = require("../utils/constants");
+const { STATUS, USER_ROLE, BOOKING_STATUS } = require("../utils/constants");
 const { errorResponseBody } = require("../utils/responsebody");
 const ObjectId = require("mongoose").Types.ObjectId;
 const theatreService = require("../services/theatre.service");
+const showService = require("../services/show.service");
 const userService = require("../services/user.service");
 
-const validateBookingRequest = async (req,res,next) => {
-    if(!req.body.theatreId){//validate the theatre id presence 
-        errorResponseBody.err = "No theatre id provided";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
+const validateBookingRequest = async (req, res, next) => {
+  //  Validate theatreId
+  if (!req.body.theatreId) {
+    errorResponseBody.err = "No theatre id provided";
+    return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+  }
 
-    if(!ObjectId.isValid(req.body.theatreId)){//validate correct theatreId format
-        errorResponseBody.err = "Invalid theatre Id provided";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
-    //check if theatre exist in database
-    const theatre = await theatreService.getTheatre(req.body.theatreId);
-    if(!theatre){
-        errorResponseBody.err = "No theatre found for the given theatre Id";
-        return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
-    }
+  if (!ObjectId.isValid(req.body.theatreId)) {
+    errorResponseBody.err = "Invalid theatre id format";
+    return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+  }
 
-    //validate movie presence 
-    if(!req.body.movieId){
-        errorResponseBody.err = "No movie id provided";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
+  const theatre = await theatreService.getTheatre(req.body.theatreId);
+  if (!theatre) {
+    errorResponseBody.err = "No theatre found for the given theatre id";
+    return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
+  }
 
-    if(!ObjectId.isValid(req.body.movieId)){
-        errorResponseBody.err = "Invalid movieId format";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
+  //  Validate showId
+  if (!req.body.showId) {
+    errorResponseBody.err = "No show id provided";
+    return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+  }
 
-    //check if movie is running in that theatre
-    if(!theatre.movies.includes(req.body.movieId)){
-        errorResponseBody.err ="No movie listed in the given theatre";
-        return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
-    }
+  if (!ObjectId.isValid(req.body.showId)) {
+    errorResponseBody.err = "Invalid show id format";
+    return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+  }
 
-    //validate presence of timings
-    if(!req.body.timing){
-        errorResponseBody.err = "No movie timing passed";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
+  // CORRECT CHECK: show belongs to theatre
+  const show = await showService.getShowById(req.body.showId);
+  if (!show || String(show.theatreId) !== String(req.body.theatreId)) {
+    errorResponseBody.err = "Show does not belong to the given theatre";
+    return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
+  }
 
-    //validate presence of seats
-    if(!req.body.noOfSeats){
-        errorResponseBody.err = "No seats passed";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
+  //  Validate seats
+  if (!req.body.seats || !Array.isArray(req.body.seats) || req.body.seats.length === 0) {
+    errorResponseBody.err = "No seats selected for booking";
+    return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+  }
 
-    //request is correct
-    next();
-}
+  next();
+};
 
-const canChangeStatus =async (req,res,next) => {
-    const user = await userService.userById(req.userId);
-    if(user.userRole == USER_ROLE.customer && req.body.status && req.body.status == BOOKING_STATUS.cancelled){// (check again)
-        errorResponseBody.err = "You are not allowed to change the booking status";
-        return res.status(STATUS.NOT_AUTHORIZED).json(errorResponseBody);
-    }
+const canChangeStatus = async (req, res, next) => {
+  const user = await userService.userById(req.userId);
 
-    next();
-}
+  if (
+    user.userRole === USER_ROLE.customer &&
+    req.body.status === BOOKING_STATUS.cancelled
+  ) {
+    errorResponseBody.err = "You are not allowed to change the booking status";
+    return res.status(STATUS.NOT_AUTHORIZED).json(errorResponseBody);
+  }
+
+  next();
+};
 
 module.exports = {
-    validateBookingRequest,
-    canChangeStatus
-}
+  validateBookingRequest,
+  canChangeStatus
+};

@@ -2,7 +2,7 @@ const Show = require("../models/show.model");
 const Theatre = require("../models/theatre.model");
 const {STATUS} = require("../utils/constants");
 
-
+//search and creation of the shows in a theatre for a particular movie (running shows).
 const createShow = async (data) => {
     try {
         const theatre = await Theatre.findById(data.theatreId);
@@ -57,6 +57,15 @@ const getShows = async (data) => {
     }
 }
 
+const getShowById = async (showId) => {
+    try {
+        const response = await Show.findById(showId);       
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 const deleteShow =async (showId) => {
     try {
         const response = await Show.findByIdAndDelete(showId);
@@ -105,5 +114,5 @@ module.exports = {
     getShows,
     deleteShow,
     updateShow,
-    updateShow
+    getShowById 
 }
