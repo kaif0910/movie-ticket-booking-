@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0A0B10;
+  --foreground: #F3F4F6;
+  --color-brand-red: #E50914;
+  --color-brand-red-hover: #C10712;
+  --color-brand-amber: #F59E0B;
+  --color-cinema-bg: #0A0B10;
+  --color-cinema-card: #13151F;
+  --color-cinema-surface: #1B1E2C;
+  --color-cinema-border: #292D40;
+  --color-cinema-text: #F3F4F6;
+  --color-cinema-muted: #9CA3AF;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-red: #E50914;
+  --color-brand-red-hover: #C10712;
+  --color-brand-amber: #F59E0B;
+  --color-cinema-bg: #0A0B10;
+  --color-cinema-card: #13151F;
+  --color-cinema-surface: #1B1E2C;
+  --color-cinema-border: #292D40;
+  --color-cinema-text: #F3F4F6;
+  --color-cinema-muted: #9CA3AF;
+  --font-display: var(--font-bebas), sans-serif;
+  --font-body: var(--font-jakarta), sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-jakarta), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Display Heading Utility */
+.font-display {
+  font-family: var(--font-bebas), sans-serif;
+  letter-spacing: 0.04em;
+}
+
+/* Cinema Banner Gradient Overlay */
+.cinema-overlay {
+  background: linear-gradient(180deg, rgba(10, 11, 16, 0.2) 0%, rgba(10, 11, 16, 0.9) 80%, #0A0B10 100%);
+}
+
+/* Cinema Ticket Stub Notch Effect */
+.ticket-stub {
+  position: relative;
+  background-color: #13151F;
+}
+
+.ticket-stub::before,
+.ticket-stub::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background-color: #0A0B10;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.ticket-stub::before {
+  left: -8px;
+}
+
+.ticket-stub::after {
+  right: -8px;
+}
