@@ -79,8 +79,35 @@ const resetPassword = async (req,res) => {
     }
 }
 
+const googleCallback = async (req, res) => {
+    try {
+        if (!req.user) {
+            errorResponseBody.err = "Google authentication failed";
+            return res.status(401).json(errorResponseBody);
+        }
+
+        const token = jwt.sign({
+            userId: req.user._id,
+            email: req.user.email
+        }, process.env.AUTH_KEY, { expiresIn: '1h' });
+
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        return res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
+    } catch (error) {
+        console.log(error);
+        if (error.err) {
+            errorResponseBody.err = error.err;
+            return res.status(error.code || 500).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 module.exports = {
     signup,
     signin,
-    resetPassword
+    resetPassword,
+    googleCallback
 }
+

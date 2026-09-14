@@ -16,8 +16,13 @@ const userSchema = mongoose.Schema({
     },
     password:{
         type: String,
-        required : true,
+        required : function() { return !this.googleId; },
         minLength: 6
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true
     },
     userRole:{
         type: String,
@@ -39,13 +44,16 @@ const userSchema = mongoose.Schema({
     },
 },{timestamps:true});
 
-userSchema.pre("save",async function(){
-    //hash the password before saving to db
-    const hash = await bcrypt.hash(this.password,10);
-    this.password = hash;
+userSchema.pre("save",async function(){ //lifecycle hook or trigger
+    //hash the password before saving to db if password is present and modified
+    if (this.password && this.isModified("password")) {
+        const hash = await bcrypt.hash(this.password,10);
+        this.password = hash;
+    }
 })
 
 userSchema.methods.isValidPassword = async function(Password){
+    if (!this.password) return false;
     const currentUser = this;
     const compare = await bcrypt.compare(Password,currentUser.password);
     return compare;

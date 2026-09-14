@@ -3,6 +3,7 @@ const app = express();// express app object
 const env = require("dotenv");
 const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
+const passport = require("./config/passport.config");
 const movieRoutes = require('./routes/movie.routes');
 const theatreRoutes = require("./routes/theatre.routes");
 const authRoutes = require("./routes/auth.routes");
@@ -10,12 +11,16 @@ const userRoutes = require("./routes/user.routes");
 const bookingRoutes = require("./routes/booking.routes");
 const showRoutes = require("./routes/show.routes");
 const paymentRoutes = require("./routes/payment.routes");
+const seatRoutes = require("./routes/seat.routes");
+
+
 
 env.config();
 
 app.use(express.json());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:true}));
+app.use(passport.initialize());
 
 movieRoutes(app);//invoking movie routes
 theatreRoutes(app);//invoking theatre routes
