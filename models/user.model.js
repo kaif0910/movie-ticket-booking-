@@ -39,7 +39,7 @@ const userSchema = mongoose.Schema({
     },
 },{timestamps:true});
 
-userSchema.pre("save",async function(){
+userSchema.pre("save",async function(){ //lifecycle hook or trigger
     //hash the password before saving to db
     const hash = await bcrypt.hash(this.password,10);
     this.password = hash;
