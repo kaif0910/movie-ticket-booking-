@@ -4,6 +4,34 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { apiClient } from './api-client';
 import { User } from './types';
 
+function decodeJwtPayload(token: string): any {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
+function userFromToken(token: string): User | null {
+  const payload = decodeJwtPayload(token);
+  if (!payload || !payload.email) return null;
+  return {
+    _id: payload.userId || '',
+    name: payload.name || payload.email.split('@')[0],
+    email: payload.email,
+    userRole: payload.userRole || 'CUSTOMER',
+    userStatus: payload.userStatus || 'APPROVED',
+  };
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -14,6 +42,7 @@ interface AuthContextType {
   loginWithGoogle: () => void;
   logout: () => void;
   setAuthToken: (token: string) => void;
+  setAuthTokenAndUser: (token: string) => User | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,25 +53,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Check URL params for google login redirect callback token
     if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlToken = urlParams.get('token');
-
-      if (urlToken) {
-        apiClient.setToken(urlToken);
-        setToken(urlToken);
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } else {
-        const storedToken = apiClient.getToken();
-        if (storedToken) {
-          setToken(storedToken);
-        }
+      const storedToken = apiClient.getToken();
+      if (storedToken) {
+        setToken(storedToken);
+        const parsedUser = userFromToken(storedToken);
+        setUser(parsedUser);
       }
       setIsLoading(false);
     }
   }, []);
+
+  const setAuthTokenAndUser = (newToken: string): User | null => {
+    apiClient.setToken(newToken);
+    setToken(newToken);
+    const parsedUser = userFromToken(newToken);
+    setUser(parsedUser);
+    return parsedUser;
+  };
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -50,13 +78,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
 
     if (response.success && response.data?.token) {
-      setToken(response.data.token);
+      setAuthTokenAndUser(response.data.token);
       return { success: true };
     }
 
     return {
       success: false,
-      err: response.err || response.message || 'Login failed',
+      err: response.err || response.message || 'Invalid email or password',
     };
   };
 
@@ -66,6 +94,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
 
     if (response.success) {
+      // Auto-signin after successful registration if credentials work
+      const signinRes = await apiClient.signin({ email: data.email, password: data.password });
+      if (signinRes.success && signinRes.data?.token) {
+        setAuthTokenAndUser(signinRes.data.token);
+      }
       return { success: true };
     }
 
@@ -86,8 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const setAuthToken = (newToken: string) => {
-    apiClient.setToken(newToken);
-    setToken(newToken);
+    setAuthTokenAndUser(newToken);
   };
 
   return (
@@ -102,6 +134,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loginWithGoogle,
         logout,
         setAuthToken,
+        setAuthTokenAndUser,
       }}
     >
       {children}
